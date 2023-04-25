@@ -9,10 +9,8 @@ defecto de Django) y le añadimos un atributo más.
 class Usuario(AbstractUser):
     adress = models.CharField(max_length=250, blank=True, null=True)
     
-class Pedido(models.Model):
-    precio_pedido = models.FloatField(blank=False, null=False)
-    fecha_pedido = models.DateField(auto_now_add=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.username
     
 class Categoria(models.Model):
     nombre = models.CharField(max_length=80, blank=False, null=False)
@@ -24,8 +22,21 @@ class Libro(models.Model):
     descripcion = models.TextField(blank=False, null=False)
     precio_unitario = models.FloatField(blank=False, null=False)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.titulo
+
+class Pedido(models.Model):
+    precio_pedido = models.FloatField(blank=False, null=False)
+    fecha_pedido = models.DateField(auto_now_add=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
 
 class Pedido_Libro(models.Model):
     cantidad_libros = models.IntegerField()
     precio_total_libros = models.FloatField()
     estado = models.BooleanField(default=False)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+
+
+
