@@ -30,6 +30,7 @@ class Pedido(models.Model):
     precio_pedido = models.FloatField(blank=False, null=False)
     fecha_pedido = models.DateField(auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    libros = models.ManyToManyField(Libro, through='Pedido_Libro')
 
 class Pedido_Libro(models.Model):
     cantidad_libros = models.IntegerField()
