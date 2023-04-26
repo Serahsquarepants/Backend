@@ -1,19 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 
 """
 Se utiliza el modelo propio CustomUser para añadir la dirección del usuario (u otros datos que
 puedan hacer falta). Al hacer herencia de AbstractUser se dispone de los datos de User (el por
 defecto de Django) y le añadimos un atributo más.
 """
+
 class Usuario(AbstractUser):
     adress = models.CharField(max_length=250, blank=True, null=True)
-    
+        
     def __str__(self):
         return self.username
     
 class Categoria(models.Model):
     nombre = models.CharField(max_length=80, blank=False, null=False)
+    
+    def __str__(self):
+        return self.nombre
 
 class Libro(models.Model):
     titulo = models.CharField(max_length=150, blank=False, null=False)
