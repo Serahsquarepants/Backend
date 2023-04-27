@@ -1,15 +1,13 @@
 import django_filters
-
+from django.db.models import Q
 from API.models import Libro
 
 class LibroFilter(django_filters.FilterSet):
-    titulo = django_filters.CharFilter(lookup_expr='icontains')
-    autor = django_filters.CharFilter(lookup_expr='icontains')
-    precio_unitario = django_filters.NumberFilter()
-    precio_unitario__gt = django_filters.NumberFilter(field_name='precio_unitario', lookup_expr='gt')
-    precio_unitario__lt = django_filters.NumberFilter(field_name='precio_unitario', lookup_expr='lt')
+    contains = django_filters.CharFilter(method='filtrar_por_contenido')
 
     class Meta:
         model = Libro
-        fields = ['titulo','autor','precio_unitario','precio_unitario__gt','precio_unitario__lt']
+        fields = ['contains']
     
+    def filtrar_por_contenido(self, queryset, name, value):
+        return queryset.filter(Q(titulo__icontains=value) | Q(autor__icontains=value))
