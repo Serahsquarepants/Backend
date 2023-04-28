@@ -1,8 +1,13 @@
 from rest_framework import serializers
 from .models import *
 
+class CategoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categoria
+        fields = '__all__'
+
 class BookSerializer(serializers.ModelSerializer):
-    categoria = serializers.StringRelatedField()
+    categoria = serializers.SlugRelatedField(slug_field='nombre', queryset=Categoria.objects.all())
     
     class Meta:
         model = Libro

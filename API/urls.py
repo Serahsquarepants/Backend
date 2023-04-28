@@ -8,4 +8,5 @@ router.register(r'libro', LibroViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    # path('libro/crear/')
 ] 
