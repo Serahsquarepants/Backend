@@ -6,7 +6,7 @@
 
       "use": "@vercel/python",
 
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.11", "sqlite": "3.8.3" }
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.11", "sqlite3": "3.8.3" }
 
   }],
 
