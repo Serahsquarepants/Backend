@@ -12,3 +12,12 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Libro
         fields = ['titulo','imagen','autor','descripcion','precio_unitario','categoria']
+
+class UserSerializer(serializer.ModelSerializer):
+
+    class Meta:
+        model = Usuario
+        fields = ['username','first_name','last_name','address','email','password']
+        extra_kwargs = {
+            'password' : {write_only: True}
+        }
