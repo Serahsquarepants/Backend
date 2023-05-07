@@ -18,6 +18,23 @@ class BookSerializer(serializers.ModelSerializer):
         fields = ['id', 'titulo', 'imagen', 'autor',
                   'descripcion', 'precio_unitario', 'categoria']
         
+class PedidoLibroSerializer(serializers.ModelSerializer):
+    cantidad = serializers.IntegerField()
+    precio_total = serializers.FloatField()
+    libro = BookSerializer()
+
+    class Meta:
+        model = Pedido_Libro
+        fields = ('id', 'cantidad', 'precio_total', 'libro')
+
+class PedidoSerializer(serializers.ModelSerializer):
+    libros = PedidoLibroSerializer(many=True)
+
+    class Meta:
+        model = Pedido
+        fields = ('id', 'precio_pedido', 'fecha_pedido', 'usuario', 'libros', 'estado')
+
+
 
 class UserSerializer(serializers.ModelSerializer):
     

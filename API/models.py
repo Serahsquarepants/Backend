@@ -26,6 +26,31 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nombre
 
+# class Libro(models.Model):
+#     titulo = models.CharField(max_length=150, blank=False, null=False)
+#     imagen = models.URLField()
+#     autor = models.CharField(max_length=150, blank=False, null=False, default='Desconocido')
+#     descripcion = models.TextField(blank=False, null=False)
+#     precio_unitario = models.FloatField(blank=False, null=False)
+#     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    
+#     def __str__(self):
+#         return self.titulo
+
+# class Pedido(models.Model):
+#     precio_pedido = models.FloatField(blank=False, null=False)
+#     fecha_pedido = models.DateField(auto_now_add=True)
+#     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+#     libros = models.ManyToManyField(Libro, through='Pedido_Libro')
+#     estado = models.BooleanField(default=False)
+
+
+# class Pedido_Libro(models.Model):
+#     cantidad_libros = models.IntegerField()
+#     precio_total_libros = models.FloatField()
+#     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+#     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+
 class Libro(models.Model):
     titulo = models.CharField(max_length=150, blank=False, null=False)
     imagen = models.URLField()
@@ -42,13 +67,14 @@ class Pedido(models.Model):
     fecha_pedido = models.DateField(auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     libros = models.ManyToManyField(Libro, through='Pedido_Libro')
+    estado = models.BooleanField(default=False)
 
 class Pedido_Libro(models.Model):
-    cantidad_libros = models.IntegerField()
-    precio_total_libros = models.FloatField()
-    estado = models.BooleanField(default=False)
-    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    cantidad = models.IntegerField(blank=False, null=False)
+    precio_total = models.FloatField(blank=False, null=False)
+
 
 
 

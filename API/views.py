@@ -35,7 +35,6 @@ class LibroDetailView(APIView):
         serializer = self.serializer_class(libro)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     basename = 'user'
@@ -100,4 +99,85 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        
+        
+        
+class CarritoViewSet(viewsets.ModelViewSet):
+    serializer_class = PedidoSerializer
+    basename = 'carrito'
 
+    def get_queryset(self):
+        return Pedido.objects.filter(usuario=self.request.user, estado=False)
+
+    def create(self, request, *args, **kwargs):
+        libros_data = request.data.get('libros') if 'libros' in request.data else []
+
+        pedido = Pedido.objects.filter(usuario=request.user, estado=False).first()
+        if not pedido:
+            pedido = Pedido.objects.create(
+                usuario=request.user,
+                precio_pedido=0
+            )
+
+        for libro_data in libros_data:
+            libro = Libro.objects.get(id=libro_data['libro']['id'])
+            cantidad = libro_data['cantidad_libros']
+
+            pedido_libro, created = Pedido_Libro.objects.get_or_create(
+                pedido=pedido,
+                libro=libro,
+                defaults={
+                    'cantidad': cantidad,
+                    'precio_total': libro.precio_unitario * cantidad
+                }
+            )
+
+            if not created:
+                pedido_libro.cantidad += cantidad
+                pedido_libro.precio_total += libro.precio_unitario * cantidad
+                pedido_libro.save()
+
+            pedido.precio_pedido += libro.precio_unitario * cantidad
+
+        pedido.save()
+        serializer = self.serializer_class(pedido)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        libros_data = request.data.get('libros') if 'libros' in request.data else []
+
+        instance.libros.all().delete()
+
+        for libro_data in libros_data:
+            libro = Libro.objects.get(id=libro_data['libro']['id'])
+            cantidad = libro_data['cantidad_libros']
+            precio_total = libro.precio_unitario * cantidad
+            Pedido_Libro.objects.create(
+                pedido=instance,
+                libro=libro,
+                cantidad=cantidad,
+                precio_total=precio_total
+            )
+            instance.precio_pedido += precio_total
+
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    @action(detail=True, methods=['put'])
+    def comprar(self, request, pk=None):
+        pedido = self.get_object()
+        pedido.estado = True
+        pedido.save()
+        serializer = self.serializer_class(pedido)
+        return Response(serializer.data)
