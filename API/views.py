@@ -6,6 +6,7 @@ from API.permissions import IsAdminOrReadOnly
 from .models import *
 from API.serializers import *
 from .filters import *
+from rest_framework.views import APIView
 
 class LibroViewSet(viewsets.ModelViewSet):
     # Security: Activate before publishing on production.
@@ -20,3 +21,14 @@ class LibroViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class LibroDetailView(APIView):
+    serializer_class = BookSerializer
+    
+    def get(self, request, *args, **kwargs):
+        try:
+            libro = Libro.objects.get(pk=kwargs['pk'])
+        except Libro.DoesNotExist:
+            return Response({'message': 'Libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(libro)
+        return Response(serializer.data, status=status.HTTP_200_OK)
