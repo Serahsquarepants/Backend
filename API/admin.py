@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario, Categoria, Libro, Pedido, Pedido_Libro
+from .models import Usuario, Categoria, Libro
 
 
 
@@ -7,5 +7,4 @@ from .models import Usuario, Categoria, Libro, Pedido, Pedido_Libro
 admin.site.register(Usuario)
 admin.site.register(Categoria)
 admin.site.register(Libro)
-admin.site.register(Pedido)
-admin.site.register(Pedido_Libro)
+# admin.site.register(Carrito)
