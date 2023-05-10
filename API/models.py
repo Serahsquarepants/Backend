@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
+from .managers import UsuarioManager
 
 """
 Se utiliza el modelo propio CustomUser para añadir la dirección del usuario (u otros datos que
@@ -8,10 +9,16 @@ defecto de Django) y le añadimos un atributo más.
 """
 
 class Usuario(AbstractUser):
-    adress = models.CharField(max_length=250, blank=True, null=True)
-        
+    address = models.CharField(max_length=250, blank=True, null=True)
+    email = models.EmailField(unique=True)
+    
+    USERNAME_FIELD = 'email' # Cambiar la clave obligatoria a email
+    REQUIRED_FIELDS = [] # Eliminar el campo username de los campos requeridos
+    
+    objects = UsuarioManager() 
+    
     def __str__(self):
-        return self.username
+        return self.email
     
 class Categoria(models.Model):
     nombre = models.CharField(max_length=80, blank=False, null=False)
