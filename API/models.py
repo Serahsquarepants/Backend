@@ -12,8 +12,8 @@ class Usuario(AbstractUser):
     address = models.CharField(max_length=250, blank=True, null=True)
     email = models.EmailField(unique=True)
     
-    USERNAME_FIELD = 'email' # Cambiar la clave obligatoria a email
-    REQUIRED_FIELDS = [] # Eliminar el campo username de los campos requeridos
+    USERNAME_FIELD = 'email' 
+    REQUIRED_FIELDS = []
     
     objects = UsuarioManager() 
     
@@ -26,6 +26,7 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Libro(models.Model):
     titulo = models.CharField(max_length=150, blank=False, null=False)
     imagen = models.URLField()
@@ -37,18 +38,14 @@ class Libro(models.Model):
     def __str__(self):
         return self.titulo
 
-class Pedido(models.Model):
-    precio_pedido = models.FloatField(blank=False, null=False)
-    fecha_pedido = models.DateField(auto_now_add=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    libros = models.ManyToManyField(Libro, through='Pedido_Libro')
 
-class Pedido_Libro(models.Model):
-    cantidad_libros = models.IntegerField()
-    precio_total_libros = models.FloatField()
-    estado = models.BooleanField(default=False)
-    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
-    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+# class Carrito(models.Model):
+#     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+#     libro = models.ForeignKey(Libro, on_delete=models.CASCADE, null=True)
+#     cantidad = models.IntegerField(blank=False, default=0)
+#     precio_total = models.FloatField(blank=False, default=0)
+#     estado = models.BooleanField(default=False)
+
 
 
 

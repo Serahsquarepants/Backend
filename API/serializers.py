@@ -17,7 +17,6 @@ class BookSerializer(serializers.ModelSerializer):
         model = Libro
         fields = ['id', 'titulo', 'imagen', 'autor',
                   'descripcion', 'precio_unitario', 'categoria']
-        
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -46,3 +45,9 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+# class CarritoSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = Carrito
+#         fields = ('libro', 'cantidad', 'precio_total', 'estado')
+        
