@@ -14,7 +14,7 @@ class LibroViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookSerializer
     filterset_class = LibroFilter
-    queryset = Libro.objects.all()
+    queryset = Libro.objects.filter(cantidad__gt=0)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, many=isinstance(request.data,list))
@@ -22,8 +22,31 @@ class LibroViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
+    def partial_update(self,request,*args,**kwargs):
+        libro = self.get_object()
+        cantidad = request.data.get('cantidad')
+        if cantidad is not None:
+            if libro.cantidad + cantidad < 0:
+                libro.cantidad = 0
+            else:
+                
+                libro.cantidad += cantidad
+            libro.save()
+            serializer = BookSerializer(libro, context={'request': request})
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'La cantidad no puede ser nula.'}, status=status.HTTP_400_BAD_REQUEST)
+    
 
-class LibroDetailView(APIView):
+
+class CategoriaView(viewsets.ModelViewSet):
+    serializer_class = CategoriaSerializer
+    basename = 'categoria'
+    queryset= Categoria.objects.all()
+    
+    
+class LibroDetailView(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     
     def get_queryset(self, request, *args, **kwargs):
@@ -33,6 +56,7 @@ class LibroDetailView(APIView):
             return Response({'message': 'Libro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         serializer = self.serializer_class(libro)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
     
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
