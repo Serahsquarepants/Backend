@@ -34,6 +34,7 @@ class Libro(models.Model):
     descripcion = models.TextField(blank=False, null=False)
     precio_unitario = models.FloatField(blank=False, null=False)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    cantidad = models.IntegerField(default=1)
     
     def __str__(self):
         return self.titulo
