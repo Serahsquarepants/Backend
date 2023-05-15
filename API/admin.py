@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario, Categoria, Libro
+from .models import Usuario, Categoria, Libro, Carrito
 
 
 
@@ -7,4 +7,4 @@ from .models import Usuario, Categoria, Libro
 admin.site.register(Usuario)
 admin.site.register(Categoria)
 admin.site.register(Libro)
-# admin.site.register(Carrito)
+admin.site.register(Carrito)

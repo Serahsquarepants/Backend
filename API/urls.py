@@ -6,7 +6,7 @@ router = routers.DefaultRouter()
 router.register(r'libro', LibroViewSet)
 router.register(r'user', UserViewSet,basename='user')
 router.register(r'category',CategoriaView,basename='categoria')
-# router.register(r'carrito', CarritoViewSet, basename='carrito')
+router.register(r'carrito', CarritoViewSet, basename='carrito')
 
 urlpatterns = [
     path('', include(router.urls)),
