@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import *
-from rest_framework.authtoken.models import Token
-
 
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,9 +43,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-# class CarritoSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Carrito
-#         fields = ('libro', 'cantidad', 'precio_total', 'estado')
-        
+class CarritoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Carrito
+        fields = ('id', 'libro', 'usuario', 'cantidad', 'precio_total', 'vendido', 'fecha')
+    

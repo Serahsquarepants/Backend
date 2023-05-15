@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import UsuarioManager
@@ -38,14 +39,27 @@ class Libro(models.Model):
     
     def __str__(self):
         return self.titulo
+    
+    def actualizar_stock(self, cantidad: int):
+        # Se usa la misma función para sumar/restar,
+        # depende del signo de cantidad
+        if self.cantidad + cantidad < 0:
+            raise Exception(f"No stock available for book {self.titulo} with Id {self.id}")
+        self.cantidad = self.cantidad + cantidad
+        self.save()
 
-
-# class Carrito(models.Model):
-#     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-#     libro = models.ForeignKey(Libro, on_delete=models.CASCADE, null=True)
-#     cantidad = models.IntegerField(blank=False, default=0)
-#     precio_total = models.FloatField(blank=False, default=0)
-#     estado = models.BooleanField(default=False)
+class Carrito(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE, null=True)
+    cantidad = models.IntegerField(blank=False, default=0)
+    precio_total = models.FloatField(blank=False, default=0)
+    vendido = models.BooleanField(default=False)
+    fecha = models.DateTimeField(null=True)
+    
+    def vender(self):
+        self.vendido = True
+        self.fecha = datetime.now()
+        self.save()
 
 
 
