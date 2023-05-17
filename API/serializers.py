@@ -28,8 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
         user = Usuario.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
-            username=validated_data['email']
-        )
+            username=validated_data['email'],
+            first_name=validated_data['first_name']
+,        )
         return user
     
     def update(self, instance, validated_data):
